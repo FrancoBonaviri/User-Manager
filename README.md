@@ -14,7 +14,7 @@
 npm install
 ```
 
-## Typescript -> 
+## Typescript 
 ```
 npm install -g typescript
 ```
