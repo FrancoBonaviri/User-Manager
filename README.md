@@ -1,7 +1,7 @@
-## User manager 
+# User manager 
 
 
-# Ready to perform any type of application with authentication and user roles
+## Ready to perform any type of application with authentication and user roles
 
 
 * Encrypted passwords
@@ -9,22 +9,22 @@
 * User permissions
 
 
-# Node modules 
+## Node modules 
 ```
 npm install
 ```
 
-# Typescript -> 
+## Typescript 
 ```
 npm install -g typescript
 ```
 
-# Compile the application
+## Compile the application
 ```
 tsc 
 ```
 
-# Start 
+## Start 
 ```
 node dist/index
 ```
