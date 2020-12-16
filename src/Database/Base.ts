@@ -8,7 +8,6 @@
 
 // imports ->
 import mysql from 'mysql';
-import keys from './keys';
 
 
 class SqlConnection {
