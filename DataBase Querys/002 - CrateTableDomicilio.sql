@@ -9,6 +9,6 @@ CREATE TABLE Domicilio(
     CalleC VARCHAR(30),
     Ciudad VARCHAR(50),
     Pais VARCHAR(50),
-    CodigoPosta VARCHAR(10),
+    CodigoPostal VARCHAR(10),
     PRIMARY KEY (id)
 );

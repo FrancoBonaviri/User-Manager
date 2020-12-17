@@ -1,8 +1,8 @@
 /*
-This is the user service class (CRUD)
-author: Franco Bonaviri | francobonaviri@hotmail.com
-Created: 15/12/2020
-Last update: 15/12/2020
+    This is the user service class (CRUD)
+    author: Franco Bonaviri | francobonaviri@hotmail.com
+    Created: 16/12/2020
+    Last update: 16/12/2020
 */
 
 // imports ->
@@ -31,7 +31,7 @@ class UserService {
         let passHash = await bcrypt.hashSync(password, salt);
 
         // Create the params ->
-        let params = [ user.email, passHash, user.nombre, user.apellido, user.FechaNacimiento , user.Telefono ];
+        let params = [ user.email, passHash, user.nombre, user.apellido, user.FechaNacimiento || null, user.Telefono || null ];
 
         //Save data ->
         this.db.executeQuery(query, params, ( res: any ) => {
@@ -39,21 +39,72 @@ class UserService {
                 return res;
             }
         }, ( err: any ) => {
-            throw new Error( err );
             console.log(err);
-        })
+            throw new Error( err );
+        })        
+    }
 
-        
+
+
+    // Get all users ->
+    getAll = async() => {
+
+        // create the query ->
+        let query = 'SELECT *from usuario WHERE FechaBaja is null';
+
+        // Execute query ->
+        this.db.executeQuery(query, [] , ( res: any ) => {
+            if( res ){
+                return res;
+            }
+        }, ( err: any ) => {
+            console.log( err )
+            throw new Error( err );
+        })
+    }
+
+
+
+    // get user by id
+    getById = ( id: number ) => {
+
+        // Create query ->
+        let query = 'SELECT *from usuario where id = ? and FechaBaja is null';
+
+        // Params ->
+        let params = [id];
+
+        // execute query ->
+        this.db.executeQuery(query, params, ( res: any ) => {
+            if( res ){
+                return res;
+            }
+        }, ( err: any) => {
+            console.log( err );
+            throw new Error( err );
+        });
+    }
+
+    // dar de baja by id
+    bajaById = ( id: number ) => {
+
+        // create the query ->
+        let query = 'Update usuario set FechaBaja = NOW() WHERE id = ?';
+
+        // Params ->
+        let params  = [id];
+
+        // execute the query ->
+        this.db.executeQuery(query, params, ( res: any) => {
+            if( res ){
+                return res;
+            }
+        }, ( err: any ) => {
+            console.log( err );
+            throw new Error( err );
+        });
     }
 
 }
-
-// Eliminar _____________________________________________________
-let service = new UserService( new SqlConnection() );
-
-let user = new Usuario(0, 'franco', 'Bonaviri', 'francobonaviri@hotmail.com', new Date(), ''); 
-
-service.insert(user, '123');
-//  ______________________________________________________
 
 export default UserService;

@@ -1,8 +1,8 @@
 /*
     This class models a user permission
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 15/12/2020
-    Last update: 15/12/2020
+    Created: 16/12/2020
+    Last update: 16/12/2020
 */
 
 class Permiso {
@@ -14,16 +14,13 @@ class Permiso {
 
 
     constructor(
-        _id: number,
-        _Codigo: string,
-        _Descripcion: string,
-        _EnUso: boolean
+       obj: any
     ) 
     {
-        this.id = _id;
-        this.Codigo = _Codigo;
-        this.Descripcion = _Descripcion;
-        this.EnUso = _EnUso; 
+        this.id = obj.Id;
+        this.Codigo = obj.Codigo;
+        this.Descripcion = obj.Descripcion;
+        this.EnUso = obj.EnUso || true; 
     }
 }
 

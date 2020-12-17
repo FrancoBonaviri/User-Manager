@@ -1,8 +1,8 @@
 /*
     This class models a user of the application
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 15/12/2020
-    Last update: 15/12/2020
+    Created: 16/12/2020
+    Last update: 16/12/2020
 */
 
 // imports ->
@@ -25,20 +25,15 @@ class Usuario {
     Domicilio: Domicilio[] = [];
 
     constructor(
-        _id: number, 
-        _nombre: string,
-        _apellido: string,
-        _email: string,
-        _FechaNacimiento: Date,
-        _Telefono: string
+        obj: any
     ) 
     {
-        this.id = _id;
-        this.nombre = _nombre;
-        this.apellido = _apellido;
-        this.email = _email;
-        this.FechaNacimiento = _FechaNacimiento;
-        this.Telefono = _Telefono;
+        this.id = obj.id;
+        this.nombre = obj.nombre;
+        this.apellido = obj.apellido;
+        this.email = obj.email;
+        this.FechaNacimiento = obj.FechaNacimiento;
+        this.Telefono = obj.Telefono;
         console.log('TODO Falta implementar el domicilio de los usuarios ("DomicilioService.LoadByUserId") ');
     }
 }
