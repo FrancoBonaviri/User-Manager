@@ -1,12 +1,13 @@
 /*
     This class models a user of the application
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 16/12/2020
-    Last update: 16/12/2020
+    Created: 18/12/2020
+    Last update: 18/12/2020
 */
 
 // imports ->
-import Domicilio from "./Domicilio";
+import Domicilio from './Domicilio';
+import DomicilioService from '../services/domicilioService';
 
 
 
@@ -22,10 +23,11 @@ class Usuario {
     FechaNacimiento: Date;
     Telefono: string;
 
-    Domicilio: Domicilio[] = [];
+    Domicilio: Domicilio;
 
     constructor(
-        obj: any
+        obj: any,
+        private domicilioService: DomicilioService
     ) 
     {
         this.id = obj.id;
@@ -34,7 +36,12 @@ class Usuario {
         this.email = obj.email;
         this.FechaNacimiento = obj.FechaNacimiento;
         this.Telefono = obj.Telefono;
-        console.log('TODO Falta implementar el domicilio de los usuarios ("DomicilioService.LoadByUserId") ');
+        if( obj.DomicilioId ){
+            this.Domicilio = this.domicilioService.getById( obj.DomicilioId );
+        }
+        else{
+            this.Domicilio = new Domicilio( {} );
+        }
     }
 }
 

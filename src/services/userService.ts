@@ -1,8 +1,8 @@
 /*
     This is the user service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 16/12/2020
-    Last update: 16/12/2020
+    Created: 18/12/2020
+    Last update: 18/12/2020
 */
 
 // imports ->
@@ -103,6 +103,29 @@ class UserService {
             console.log( err );
             throw new Error( err );
         });
+    }
+
+    //Existe user ->
+    existUser = ( id: number ): any => {
+
+        // create the query ->
+        let query = 'Select COUNT(*) from usuario WHERE id = ?';
+
+        // Params ->
+        let params = [id];
+
+        // Execute query ->
+        this.db.executeQuery( query, params, ( res: any ) => {
+            // Si encuentra algo retorno true ->
+            if( res === 1 ){
+                return true;
+            }
+            return false;
+        }, ( err: any ) => {
+            console.log( err );
+            throw new Error( err );
+        });
+
     }
 
 }

@@ -1,20 +1,22 @@
 /*
     This is the permiso service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 16/12/2020
-    Last update: 16/12/2020
+    Created: 18/12/2020
+    Last update: 18/12/2020
 */
 
 //  imports 
 import SqlConnection from '../Database/Base';
 import Permiso from '../models/Permiso';
+import UserService from './userService';
 
 
 
 class PermisoService {
     
     constructor(
-        private db: SqlConnection
+        private db: SqlConnection,
+        private userService: UserService
     )
     {}
 
@@ -100,6 +102,61 @@ class PermisoService {
             console.log( err );
             throw new Error( err );
         });
+    }
+
+    // existe permiso ->
+    existPermission = ( id: number ): any => {
+        // create the query ->
+        let query = 'Select COUNT(*) from permisos WHERE id = ?';
+
+        // Params ->
+        let params = [id];
+
+        // Execute query ->
+        this.db.executeQuery( query, params, ( res: any ) => {
+            // Si encuentra algo retorno true ->
+            if( res === 1 ){
+                return true;
+            }
+            return false;
+        }, ( err: any ) => {
+            console.log( err );
+            throw new Error( err );
+        });
+    }
+
+    // Este metodo agrega un permiso al usuario ->
+    addPermissionToUser = ( userId: number, permissId: number ) => {
+        
+        // validate the existence of the user ->
+        if( !this.userService.existUser(userId) ){
+            throw new Error(' User does not Exist');
+        }
+
+        // validate the existence of the permission ->
+        if ( !this.existPermission( permissId ) ){
+            throw new Error('Permission does not Exist');
+        }
+
+
+        // Crete the query ->
+        let query = 'INSERT into usuariospermisos (UsuarioId, PermisoId)'
+        + 'VALUES (?, ?)';
+
+        // Create the params ->
+        let params = [userId, permissId];
+
+        // Execute ->
+          // execute query ->
+          this.db.executeQuery(query, params, ( res: any ) => {
+            if( res ){
+                return res;
+            }
+        }, ( err: any) => {
+            console.log( err );
+            throw new Error( err );
+        });
+        
     }
 
 }
