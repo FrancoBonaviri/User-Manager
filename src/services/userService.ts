@@ -12,11 +12,7 @@ import bcrypt from 'bcrypt';
 
 class UserService {
 
-    constructor(
-        private db: SqlConnection
-    )
-    {}
-
+    private db: SqlConnection = new SqlConnection();
 
     // Create a user 
     insert = async(user: Usuario, password: string) => {
@@ -47,20 +43,21 @@ class UserService {
 
 
     // Get all users ->
-    getAll = async() => {
-
-        // create the query ->
-        let query = 'SELECT *from usuario WHERE FechaBaja is null';
-
-        // Execute query ->
-        this.db.executeQuery(query, [] , ( res: any ) => {
-            if( res ){
-                return res;
-            }
-        }, ( err: any ) => {
-            console.log( err )
-            throw new Error( err );
-        })
+    getAll = () => {
+        return new Promise( ( resolve , reject ) => {
+            // create the query ->
+            let query = 'SELECT *from usuario WHERE FechaBaja is null';
+    
+            // Execute query ->
+            this.db.executeQuery(query, [] , ( res: any ) => {
+                if( res ){
+                    resolve(res);
+                }
+            }, ( err: any ) => {
+                console.log( err )
+                reject( err );
+            })
+        });
     }
 
 

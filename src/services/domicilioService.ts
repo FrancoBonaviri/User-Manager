@@ -11,11 +11,8 @@ import Domicilio from '../models/Domicilio';
 
 
 class DomicilioService {
-
-    constructor(
-        private db: SqlConnection
-    )
-    {}
+    
+    private db: SqlConnection = new SqlConnection()
 
     //  insert domicilio ->
     insert = (direcc: Domicilio) => {

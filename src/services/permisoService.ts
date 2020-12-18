@@ -13,10 +13,10 @@ import UserService from './userService';
 
 
 class PermisoService {
-    
+    private db: SqlConnection = new SqlConnection();
+    private userService: UserService = new UserService()
+
     constructor(
-        private db: SqlConnection,
-        private userService: UserService
     )
     {}
 

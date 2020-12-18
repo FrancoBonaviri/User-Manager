@@ -1,26 +1,29 @@
 /*
     This is the initial server configuration of the application 
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 14/12/2020
-    Last update: 14/12/2020
+    Created: 18/12/2020
+    Last update: 18/12/2020
 */
 
 // Importando express y el tipado para typescript ->
 import express from 'express';
 import { Application } from 'express';
-
+import router from './routes';
 
 // Server Class ->
 class Server {
 
     //Aplication attribute ->
-    private app: Application;
+    app: Application;
 
     //Constructor whit the port application ->
     constructor(private port?: number) {
 
         // Initialized express ->
         this.app = express();
+
+        // Routes ->
+        this.app.use('/', router);
     }
 
     // Start server message ->

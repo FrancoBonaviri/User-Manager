@@ -1,13 +1,14 @@
 /*
     This is the master class of the database 
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 15/12/2020
-    Last update: 15/12/2020
+    Created: 18/12/2020
+    Last update: 18/12/2020
 */
 
 
 // imports ->
 import mysql from 'mysql';
+require('dotenv').config()
 
 
 class SqlConnection {
@@ -17,32 +18,36 @@ class SqlConnection {
 
     // Start the mysql connection ->
     constructor() {
+        console.log(process.env.DATABASE_USER, process.env.DATABASE_PASSWORD)
         this.connection = mysql.createConnection(
         {
             host: 'localHost',
-            user: 'root',
+            user: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
-            database: process.env.DATABASE_USER
+            database: 'usuariomanager',
+            insecureAuth: true
         });
     }
-
-
+    
+    
     // This method execute query and returns the result in a callback
     public executeQuery = (query: string, params: any[], callBack: Function, callbackError: Function) => {
-
-        //Start the connection ->
-        this.connection.connect();
-
+        
+        
         // execute the query ->
-        this.connection.query( query, params, ( err, result ) => {
-            if( err ) {
-                this.connection.end();
-                return callbackError( err );
-            }
+        try {
+            this.connection.query( query, params, ( err , res) => {
 
-            this.connection.end();
-            callBack( result );
-        });
+                if( err ) {
+                    return callbackError( err );
+                }
+
+                callBack( res );
+            });
+            
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 
