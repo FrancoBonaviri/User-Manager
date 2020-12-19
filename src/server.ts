@@ -1,8 +1,8 @@
 /*
     This is the initial server configuration of the application 
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 18/12/2020
-    Last update: 18/12/2020
+    Created: 19/12/2020
+    Last update: 19/12/2020
 */
 
 // Importando express y el tipado para typescript ->
@@ -10,6 +10,7 @@ import express from 'express';
 import { Application } from 'express';
 import router from './routes';
 
+import bodyParser from 'body-parser';
 // Server Class ->
 class Server {
 
@@ -21,9 +22,13 @@ class Server {
 
         // Initialized express ->
         this.app = express();
-
+        this.config();
         // Routes ->
         this.app.use('/', router);
+    }
+
+    private config() {
+        this.app.use( bodyParser.json() );
     }
 
     // Start server message ->

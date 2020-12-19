@@ -1,8 +1,8 @@
 /*
     This is the direccion service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 18/12/2020
-    Last update: 18/12/2020
+    Created: 19/12/2020
+    Last update: 19/12/2020
 */
 
 // Imports ->
@@ -17,41 +17,50 @@ class DomicilioService {
     //  insert domicilio ->
     insert = (direcc: Domicilio) => {
 
-        // Create the query ->
-        let query = 'INSERT into domicilio (Numero, CalleA, CalleB, CalleC, Ciudad, Pais, CodigoPostal)'
-        + ' VALUES (?, ?, ?, ?, ?, ?, ?)';
+        return new Promise( ( resolve , reject ) => {
 
-        // Params ->
-        let params = [ direcc.numero, direcc.CalleA, direcc.CalleB || null, direcc.CalleC || null, direcc.Ciudad, direcc.Pais, direcc.CodigoPostal ];
+            // Create the query ->
+            let query = 'INSERT into domicilio (Numero, CalleA, CalleB, CalleC, Ciudad, Pais, CodigoPostal)'
+            + ' VALUES (?, ?, ?, ?, ?, ?, ?)';
+    
+            // Params ->
+            let params = [ direcc.numero, direcc.CalleA, direcc.CalleB || null, direcc.CalleC || null, direcc.Ciudad, direcc.Pais, direcc.CodigoPostal ];
+    
+            // Execute query ->
+            this.db.executeQuery( query, params , ( res: any) => {
+                if( res ){
+                    resolve( res );
+                }
+            }, ( err: any ) => {
+                console.log(err);
+                reject( err );
+            });
 
-        // Execute query ->
-        this.db.executeQuery( query, params , ( res: any) => {
-            if( res ){
-                return res;
-            }
-        }, ( err: any ) => {
-            console.log(err);
-            throw new Error( err );
         });
+
     }
 
     // Get direccion by id
-    getById( id: number ): any  {
+    getById( id: number )  {
 
-        // crete the query ->
-        let query = 'SELECT * from domicilio where id = ?';
+        return new Promise<Domicilio>( ( resolve , reject ) => {
 
-        // Params ->
-        let params = [id];
+            // crete the query ->
+            let query = 'SELECT * from domicilio where id = ?';
+    
+            // Params ->
+            let params = [id];
+    
+            // Execute the query ->
+            this.db.executeQuery( query, params, ( res: any ) => {
+                if( res ){
+                    resolve(new Domicilio( res ));
+                }
+            }, ( err: any ) => {
+                console.log(err);
+                reject( err );
+            });
 
-        // Execute the query ->
-        this.db.executeQuery( query, params, ( res: any ) => {
-            if( res ){
-                return new Domicilio( res );
-            }
-        }, ( err: any ) => {
-            console.log(err);
-            throw new Error( err );
         });
 
     }
@@ -59,44 +68,54 @@ class DomicilioService {
     // Delete direccion by id ->
     deleteById = ( id: number ) => {
 
-        // crete the query ->
-        let query = 'Delete domicilio WHERE id = ?';
+        return new Promise( ( resolve , reject ) => {
+            
+            // crete the query ->
+            let query = 'Delete domicilio WHERE id = ?';
+    
+            // Params ->
+            let params = [id];
+    
+            // Execute the query ->
+            this.db.executeQuery( query, params, ( res: any ) => {
+                if( res ){
+                    resolve( res  );
+                }
+            }, ( err: any ) => {
+                console.log(err);
+                reject( err );
+            });
 
-        // Params ->
-        let params = [id];
-
-        // Execute the query ->
-        this.db.executeQuery( query, params, ( res: any ) => {
-            if( res ){
-                return res;
-            }
-        }, ( err: any ) => {
-            console.log(err);
-            throw new Error( err );
         });
+
 
     }
 
     // Exist domicilio ->
     existDomicilio = ( id: number ) => {
-        
-        // query ->
-        let query = 'SELECT COUNT(*) from domicilio WHERE id = ?';
 
-        // Params ->
-        let params = [id];
+        return new Promise<boolean>( ( resolve , reject ) => {
 
-        // Execute query ->
-        this.db.executeQuery( query, params, ( res: any ) => {
-            // Si encuentra algo retorno true ->
-            if( res === 1 ){
-               return true;
-            }
-           return false;
-        }, ( err: any ) => {
-            console.log( err );
-            throw new Error( err );
+            // query ->
+            let query = 'SELECT COUNT(*) from domicilio WHERE id = ?';
+    
+            // Params ->
+            let params = [id];
+    
+            // Execute query ->
+            this.db.executeQuery( query, params, ( res: any ) => {
+                // Si encuentra algo retorno true ->
+                if( res === 1 ){
+                   resolve( true );
+                }
+               return false;
+            }, ( err: any ) => {
+                console.log( err );
+                reject( err );
+            });
+
         });
+        
     }
 
 }

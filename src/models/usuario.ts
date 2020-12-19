@@ -14,6 +14,8 @@ import DomicilioService from '../services/domicilioService';
 
 
 class Usuario {
+    
+    private domicilioService = new DomicilioService();
 
     // Attributes -> 
     id: number;
@@ -25,9 +27,8 @@ class Usuario {
 
     Domicilio: Domicilio;
 
-    constructor(
+    constructor (
         obj: any,
-        private domicilioService: DomicilioService
     ) 
     {
         this.id = obj.id;
@@ -36,13 +37,15 @@ class Usuario {
         this.email = obj.email;
         this.FechaNacimiento = obj.FechaNacimiento;
         this.Telefono = obj.Telefono;
+        this.Domicilio = new Domicilio( {} );
         if( obj.DomicilioId ){
-            this.Domicilio = this.domicilioService.getById( obj.DomicilioId );
-        }
-        else{
-            this.Domicilio = new Domicilio( {} );
-        }
+            this.domicilioService.getById( obj.DomicilioId ).then( (res: Domicilio ) => {
+                this.Domicilio = res;
+            });
+        } 
+ 
     }
+
 }
 
 
