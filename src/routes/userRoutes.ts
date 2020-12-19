@@ -34,6 +34,10 @@ userRoutes.get('/', usersController.getUsers ); // Get all users
 
 userRoutes.get('/:id', usersController.getUserById ); // Get user by id
 
+userRoutes.get('/getbyEmail/:email', usersController.getUserByEmail ); // Get user by email
+
+userRoutes.put('/:id', usersController.deleteUser ) // Delete user 
+
 
 
 export default userRoutes;

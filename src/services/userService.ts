@@ -70,7 +70,7 @@ class UserService {
 
     // get user by id
     getById = ( id: number ) => {
-        return new Promise<Usuario>( ( resolve , reject ) => {
+        return new Promise<any>( ( resolve , reject ) => {
 
             // Create query ->
             let query = 'SELECT *from usuario where id = ? and FechaBaja is null';
@@ -80,8 +80,12 @@ class UserService {
     
             // execute query ->
             this.db.executeQuery(query, params, ( res: any ) => {
-                if( res ){
-                    resolve( res );
+                if( res && res[0] ){
+                    this.fill( res[0] );
+                    resolve( res[0] );
+                }
+                else {
+                    resolve ( null );
                 }
             }, ( err: any) => {
                 console.log( err );
@@ -104,9 +108,12 @@ class UserService {
     
             // execute query ->
             this.db.executeQuery(query, params, ( res: any ) => {
-                if( res ){
+                if( res && res[0] ){
                     this.fill( res[ 0 ] );
                     resolve( res[0] );
+                }
+                else {
+                    resolve( null )
                 }
             }, ( err: any) => {
                 console.log( err );

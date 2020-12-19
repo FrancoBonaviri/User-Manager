@@ -30,11 +30,51 @@ class UserController {
 
 
     getUserById = async ( req: Request, res: Response ) => {
-        res.json({
-            ok: false,
-            message: 'Method not implemented'
+
+        // Get the id ->
+        const id = req.params.id;
+
+        // get the user ->
+        const user = await this.userSevice.getById( Number(id) );
+
+        if( !user ){
+            return res.status(400).json({
+                ok: false,
+                message: 'User not found'
+            });
+        }
+        
+        return res.json({
+            Ok: true,
+            user
         });
+
     }
+
+    getUserByEmail = async ( req: Request, res: Response ) => {
+
+        // Get the id ->
+        const email = req.params.email;
+        
+        // get the user ->
+        const user = await this.userSevice.getByEmail( email );
+
+        if( !user ){
+            return res.status(400).json({
+                ok: false,
+                message: 'User not found'
+            });
+        }
+        
+        return res.json({
+            Ok: true,
+            user
+        });
+
+    }
+
+
+    
 
 
     createUser = async ( req: Request, res: Response ) => {
@@ -64,12 +104,28 @@ class UserController {
             });
         }
         else {
-            return res.status(500).json({
+            return res.status(403).json({
                 ok: false,
-                message: 'Internal server error'
+                message: 'Unknown error, user not created'
             });
         }
     }
+
+    deleteUser = async( req: Request, res: Response ) => {
+        
+        // get the id ->
+        const id = req.params.id;
+
+        // delete the user ->
+        await this.userSevice.bajaById( Number(id) );
+
+        return res.json({
+            ok: true,
+            message: 'User deleted'
+        });
+    }
+
+    
 }
 
 
