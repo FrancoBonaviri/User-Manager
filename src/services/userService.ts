@@ -55,9 +55,12 @@ class UserService {
     
             // Execute query ->
             this.db.executeQuery(query, [] , ( res: any ) => {
-                if( res ){
+                if( res?.length > 0 ){
                     this.fillList( res );
                     resolve(res);
+                }
+                else {
+                    resolve([]);
                 }
             }, ( err: any ) => {
                 console.log( err )
@@ -80,7 +83,7 @@ class UserService {
     
             // execute query ->
             this.db.executeQuery(query, params, ( res: any ) => {
-                if( res && res[0] ){
+                if( res?.length > 0 ){
                     this.fill( res[0] );
                     resolve( res[0] );
                 }
@@ -108,7 +111,7 @@ class UserService {
     
             // execute query ->
             this.db.executeQuery(query, params, ( res: any ) => {
-                if( res && res[0] ){
+                if( res?.length > 0 ){
                     this.fill( res[ 0 ] );
                     resolve( res[0] );
                 }
@@ -165,7 +168,7 @@ class UserService {
                 if( res[0] === 1 ){
                     resolve( true );
                 }
-                return false;
+                resolve( false );
             }, ( err: any ) => {
                 console.log( err );
                 reject( err );

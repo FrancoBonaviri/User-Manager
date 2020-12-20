@@ -8,6 +8,7 @@
 //  imports ->
 import { Router } from "express";
 import userRoutes from "./userRoutes";
+import adressRoutes from './demicilioRoutes';
 
 //  Create the router ->
 const router = Router();
@@ -16,7 +17,7 @@ const router = Router();
 // user routes ->
 router.use('/user', userRoutes );
 
-
+router.use('/adress', adressRoutes );
 
 
 export default router;

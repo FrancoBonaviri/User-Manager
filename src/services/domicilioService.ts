@@ -1,13 +1,14 @@
 /*
     This is the direccion service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 19/12/2020
-    Last update: 19/12/2020
+    Created: 20/12/2020
+    Last update: 20/12/2020
 */
 
 // Imports ->
 import SqlConnection from '../Database/Base';
 import Domicilio from '../models/Domicilio';
+import domicilio from '../interfaces/domicilio';
 
 
 class DomicilioService {
@@ -41,9 +42,9 @@ class DomicilioService {
     }
 
     // Get direccion by id
-    getById( id: number )  {
+    getById = ( id: number ) =>  {
 
-        return new Promise<Domicilio>( ( resolve , reject ) => {
+        return new Promise<any>( ( resolve , reject ) => {
 
             // crete the query ->
             let query = 'SELECT * from domicilio where id = ?';
@@ -53,8 +54,34 @@ class DomicilioService {
     
             // Execute the query ->
             this.db.executeQuery( query, params, ( res: any ) => {
-                if( res ){
-                    resolve(new Domicilio( res ));
+                if( res?.length > 0 ){
+                    resolve( this.fill( res[0] ) );
+                } else {
+                    resolve( null );
+                }
+            }, ( err: any ) => {
+                console.log(err);
+                reject( err );
+            });
+
+        });
+
+    }
+
+    // Get all Direcciones 
+    getAll = () =>  {
+
+        return new Promise<any[]>( ( resolve , reject ) => {
+
+            // crete the query ->
+            let query = 'SELECT * from domicilio';
+    
+            // Execute the query ->
+            this.db.executeQuery( query, [], ( res: any ) => {
+                if( res?.length > 0  ){
+                    resolve( this.fillList( res ) );
+                } else {
+                    resolve( [] );
                 }
             }, ( err: any ) => {
                 console.log(err);
@@ -105,10 +132,10 @@ class DomicilioService {
             // Execute query ->
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
-                if( res === 1 ){
+                if( res[0] === 1 ){
                    resolve( true );
                 }
-               return false;
+               resolve( false );
             }, ( err: any ) => {
                 console.log( err );
                 reject( err );
@@ -117,6 +144,39 @@ class DomicilioService {
         });
         
     }
+
+
+    private fill = ( obj: any ): domicilio => {
+        
+        // Create the object ->
+        const domicilio: domicilio = {
+            id: obj.id,
+            Numero: obj.Numero,
+            CalleA: obj.CalleA,
+            CalleB: obj.CalleB || null,
+            CalleC: obj.CalleC || null,
+            Ciudad: obj.Ciudad,
+            Pais: obj.Pais,
+            CodigoPostal: obj.CodigoPostal 
+        }
+
+
+        return domicilio;
+    }
+
+    private fillList = ( objs: any[] ): domicilio[] => {
+
+        // create the array ->
+        let domiciliosArr: domicilio[] = []; 
+
+        //  add items to array ->
+        objs.forEach( (obj: any) => {
+            domiciliosArr.push( this.fill( obj ) );
+        });
+
+
+        return domiciliosArr;
+    } 
 
 }
 
