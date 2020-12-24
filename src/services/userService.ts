@@ -10,10 +10,12 @@ import SqlConnection from '../Database/Base';
 import Usuario from '../models/usuario';
 import bcrypt from 'bcrypt'; 
 import usuario from '../interfaces/usuario';
+import DomicilioService from './domicilioService';
 
 class UserService {
 
     private db: SqlConnection = new SqlConnection();
+    private domicilioService = new DomicilioService();
 
     // Create a user 
     insert = (user: Usuario, password: string) => {
@@ -177,6 +179,85 @@ class UserService {
         });
 
 
+    }
+
+    updateUser = ( userId: number, user: usuario ):Promise<any> => {
+        return new Promise<any>( async( resolve, reject ) => {
+
+            // Valido que el usuario existe ->
+            if( ! await this.existUser( userId )){
+                reject('El usuario no existe');
+            }
+
+            // creo que query ->
+            let query = 'Update usuario set ';
+            
+            // Params ->
+            let params = '';
+
+            if( user.Telefono.trim() !== "" ) {params += `Telefono = ${ user.Telefono }, `}
+            if( user.nombre.trim() !== "" ) {params += `nombre = ${ user.nombre }, `}
+            if( user.apellido.trim() !== "" ) {params += `apellido = ${ user.apellido }, `}
+            if( user.Telefono.trim() !== "" ) {params += `Telefono = ${ user.Telefono }, `}
+            if( user.FechaNacimiento  ) {params += `FechaNacimiento = ${ user.FechaNacimiento }, `}
+
+            // Si se actualizo algun campo ->
+            if(params != ''){
+
+                // Completo el query ->
+                let stringQuery = query + params + 'WHERE id = ?';
+
+                // ejecuto el query ->
+                this.db.executeQuery(stringQuery, [userId], ( res: any ) => {
+                    if( res ){
+                        resolve( res );
+                    }
+                }, ( err: any ) => {
+                    console.log( err );
+                    reject( err );
+                });
+            } else {
+                resolve( user );
+            }
+
+        });
+    }
+
+
+    updateDomicilioUser = ( userId: number, domicilioId: number ) => {
+        return new Promise<any> ( async( resolve, reject ) => {
+
+            // Valido que el usuario existe ->
+            if( ! await this.existUser( userId )){
+                reject('El usuario no existe');
+            }
+
+            // valido que el domicilio exista ->
+            if( !await this.domicilioService.existDomicilio( domicilioId ) ){
+                reject('El domicilio no existe');
+            }
+
+            // Actualizo el usuario ----------
+
+            // create the query ->
+            let query = 'UPDATE usuario set DomicilioId = ? WHERE id = ?';
+            
+            // Params ->
+            let params = [ domicilioId, userId ];
+
+            // Ejecto ->
+            this.db.executeQuery( query, params, ( res: any ) => {
+
+                if( res ){
+                    resolve( res ); 
+                }
+
+            }, ( err: any ) => {
+                console.log(err);
+                reject( err );
+            });
+
+        });
     }
 
 
