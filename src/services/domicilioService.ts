@@ -1,8 +1,8 @@
 /*
     This is the direccion service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
-    Created: 24/12/2020
-    Last update: 24/12/2020
+    Created: 31/12/2020
+    Last update: 31/12/2020
 */
 
 // Imports ->
@@ -28,9 +28,10 @@ class DomicilioService {
             let params = [ direcc.numero, direcc.CalleA, direcc.CalleB || null, direcc.CalleC || null, direcc.Ciudad, direcc.Pais, direcc.CodigoPostal ];
     
             // Execute query ->
-            this.db.executeQuery( query, params , ( res: any) => {
+            this.db.executeQuery( query, params , async( res: any) => {
                 if( res ){
-                    resolve( res );
+                    const inserted = await this.getLast();
+                    resolve( inserted );
                 }
             }, ( err: any ) => {
                 console.log(err);
@@ -133,7 +134,7 @@ class DomicilioService {
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
                 if( res[0] === 1 ){
-                   resolve( true );
+                   return resolve( true );
                 }
                resolve( false );
             }, ( err: any ) => {
@@ -177,6 +178,29 @@ class DomicilioService {
 
         return domiciliosArr;
     } 
+
+    private getLast = async(): Promise<domicilio> => {
+        return new Promise<domicilio>( ( resolve , reject ) => {
+
+            // query ->
+            let query = 'select *from Domicilio order by 1 desc limit 1'
+    
+            // Execute query ->
+            this.db.executeQuery( query, [], ( res: any ) => {
+                // Si encuentra algo retorno true ->
+                if( res[0] ){
+                    // Armo el objeto
+                    const domicilio = this.fill( res[0] )
+                   return resolve( domicilio );
+                }
+               resolve( 0 );
+            }, ( err: any ) => {
+                console.log( err );
+                reject( err );
+            });
+
+        });
+    }
 
 }
 
