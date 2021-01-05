@@ -37,7 +37,7 @@ class UserService {
             //Save data ->
             this.db.executeQuery(query, params, ( res: any ) => {
                 if( res ){
-                    resolve( res );
+                    resolve( res.insertId );
                 }
             }, ( err: any ) => {
                 console.log(err);
@@ -159,7 +159,7 @@ class UserService {
         return new Promise<boolean>( ( resolve , reject ) => {
 
             // create the query ->
-            let query = 'Select COUNT(*) from usuario WHERE id = ?';
+            let query = 'Select * from usuario WHERE id = ?';
     
             // Params ->
             let params = [id];
@@ -167,12 +167,11 @@ class UserService {
             // Execute query ->
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
-                if( res[0] === 1 ){
-                    resolve( true );
+                if( res.length > 0 ){
+                    return resolve( true );
                 }
                 resolve( false );
             }, ( err: any ) => {
-                console.log( err );
                 reject( err );
             });
 

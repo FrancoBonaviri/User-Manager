@@ -56,15 +56,20 @@ class AdressController {
         try {
             
             // Creo el domicilio ->
-            const domicilio = new Domicilio( req.body );
+            let domicilio = new Domicilio( req.body );
     
             // Guardo el domicilio en la base de datos ->
-            const data = await this.domicilioService.insert( domicilio );
+            const id = await this.domicilioService.insert( domicilio );
     
+            // Creo el objeto final ->
+            domicilio.id = id;
+            
             // return ->
             res.json({
                 ok: true,
-                data
+                address: {
+                    ...domicilio
+                }
             });
 
         } catch (error) {

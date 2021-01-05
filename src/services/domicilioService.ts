@@ -16,7 +16,7 @@ class DomicilioService {
     private db: SqlConnection = new SqlConnection()
 
     //  insert domicilio ->
-    insert = (direcc: Domicilio) => {
+    insert = (direcc: Domicilio): Promise<number> => {
 
         return new Promise( ( resolve , reject ) => {
 
@@ -30,8 +30,7 @@ class DomicilioService {
             // Execute query ->
             this.db.executeQuery( query, params , async( res: any) => {
                 if( res ){
-                    const inserted = await this.getLast();
-                    resolve( inserted );
+                    resolve( res.insertId );
                 }
             }, ( err: any ) => {
                 console.log(err);
@@ -178,29 +177,6 @@ class DomicilioService {
 
         return domiciliosArr;
     } 
-
-    private getLast = async(): Promise<domicilio> => {
-        return new Promise<domicilio>( ( resolve , reject ) => {
-
-            // query ->
-            let query = 'select *from Domicilio order by 1 desc limit 1'
-    
-            // Execute query ->
-            this.db.executeQuery( query, [], ( res: any ) => {
-                // Si encuentra algo retorno true ->
-                if( res[0] ){
-                    // Armo el objeto
-                    const domicilio = this.fill( res[0] )
-                   return resolve( domicilio );
-                }
-               resolve( 0 );
-            }, ( err: any ) => {
-                console.log( err );
-                reject( err );
-            });
-
-        });
-    }
 
 }
 

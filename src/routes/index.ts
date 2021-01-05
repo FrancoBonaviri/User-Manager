@@ -9,6 +9,7 @@
 import { Router } from "express";
 import userRoutes from "./userRoutes";
 import adressRoutes from './demicilioRoutes';
+import permisosRoutes from "./permisoRoutes";
 
 //  Create the router ->
 const router = Router();
@@ -18,6 +19,8 @@ const router = Router();
 router.use('/user', userRoutes );
 
 router.use('/adress', adressRoutes );
+
+router.use('/permiso', permisosRoutes );
 
 
 export default router;

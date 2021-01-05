@@ -30,7 +30,7 @@ class PermisoService {
             //Save data ->
             this.db.executeQuery(query, params, ( res: any ) => {
                 if( res ){
-                    resolve(res);
+                    resolve(res.insertId);
                 }
             }, ( err: any ) => {
                 console.log(err);
@@ -119,7 +119,7 @@ class PermisoService {
         return new Promise( ( resolve , reject ) => {
 
             // create the query ->
-            let query = 'Select COUNT(*) from permisos WHERE id = ?';
+            let query = 'Select * from permisos WHERE id = ?';
     
             // Params ->
             let params = [id];
@@ -127,7 +127,31 @@ class PermisoService {
             // Execute query ->
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
-                if( res === 1 ){
+                if( res.length > 0 ){
+                    resolve( true );
+                }
+                resolve( false );
+                
+            }, ( err: any ) => {
+                console.log( err );
+               reject( err );
+            });
+        });
+    }
+
+    existPermisoTouser = (idUser: number, idPermiso: number) => {
+        return new Promise( ( resolve , reject ) => {
+
+            // create the query ->
+            let query = 'Select * from Usuariospermisos WHERE UsuarioId = ? AND PermisoId = ?';
+    
+            // Params ->
+            let params = [idUser, idPermiso];
+    
+            // Execute query ->
+            this.db.executeQuery( query, params, ( res: any ) => {
+                // Si encuentra algo retorno true ->
+                if( res.length > 0 ){
                     resolve( true );
                 }
                 resolve( false );
@@ -144,15 +168,19 @@ class PermisoService {
         return new Promise( async( resolve , reject ) => {
             
             // validate the existence of the user ->
-            if( !this.userService.existUser(userId) ){
-               reject(' User does not Exist');
+            if( ! await this.userService.existUser(userId) ){
+               return reject(' User does not Exist');
             }
     
             // validate the existence of the permission ->
-            if (  !this.existPermission( permissId ) ){
-               reject('Permission does not Exist');
+            if ( ! await this.existPermission( permissId ) ){
+               return reject('Permission does not Exist');
             }
     
+            // Valido que el usuario no tenga ese permiso ->
+            if( await this.existPermisoTouser( userId, permissId )){
+                return reject('El usuario ya tiene ese permiso')
+            }
     
             // Crete the query ->
             let query = 'INSERT into usuariospermisos (UsuarioId, PermisoId)'
@@ -177,3 +205,6 @@ class PermisoService {
     }
 
 }
+
+
+export default PermisoService;
