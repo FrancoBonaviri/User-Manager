@@ -204,6 +204,44 @@ class PermisoService {
         
     }
 
+
+
+    /**
+     * Este metodo elimina el permiso de un usuario
+     * @param userId 
+     * @param permisoId 
+     */
+    deletePermisoFromUser = (userId: number, permisoId: number) => {
+
+        return new Promise<void>( async(resolve, reject) => {
+
+            // validate the existence of the user ->
+            if( ! await this.userService.existUser(userId) ){
+               return reject(' User does not Exist');
+            }
+    
+            // validate the existence of the permission ->
+            if ( ! await this.existPermission( permisoId ) ){
+               return reject('Permission does not Exist');
+            }
+
+            // Crete the query ->
+            let query = 'DELETE FROM usuariospermisos WHERE UsuarioId = ? AND PermisoId = ?';
+
+            // Ejecuto ->
+            this.db.executeQuery(query, [userId, permisoId], (res: any) => {
+                resolve();
+            }, (err: any )=> {
+                reject(err);
+            })
+
+
+        })
+
+
+
+    }
+
 }
 
 

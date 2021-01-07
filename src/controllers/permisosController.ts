@@ -43,7 +43,7 @@ class PermisoController{
         const { idUser, idPermiso } = req.body;
 
         // Guardo el registro en la DB ->
-        await this.permisoService.addPermissionToUser( idUser, idPermiso ).then( data => {
+        this.permisoService.addPermissionToUser( idUser, idPermiso ).then( data => {
 
             return res.json({
                 ok: true,
@@ -60,6 +60,45 @@ class PermisoController{
 
     }
 
+
+    deleteToUser = async( req: Request, res: Response) => {
+
+        // Obtengo los id ->
+        const { idUser, idPermiso } = req.body;
+
+        // Elimino el permiso del usuario ->
+        this.permisoService.deletePermisoFromUser(idUser, idPermiso).then( () => {
+            return res.json({
+                ok: true,
+                msg: 'El permiso fue removido del usuario'
+            });
+        }).catch(err => {
+            return res.json({
+                ok: false,
+                msg: err
+            })
+        }) 
+    }
+
+    deletePermiso = async( req: Request, res: Response) => {
+
+        // obtengo el id ->
+        const id = Number(req.params.id);
+
+        // Doy de baja el permiso ->
+        this.permisoService.bajaById( id ).then( () => {
+            return res.json({
+                ok: true,
+                msg: 'El permiso fue dado de baja con exito'
+            });
+        }).catch( err => {
+            return res.json({
+                ok: false,
+                msg: err
+            })
+        })
+
+    }
 
 
 }

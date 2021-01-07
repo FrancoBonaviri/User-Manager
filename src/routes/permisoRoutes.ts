@@ -32,6 +32,8 @@ permisosRoutes.post('/', permisoController.insert );
 permisosRoutes.post('/AddToUser/', permisoController.addToUser );
 
 
+permisosRoutes.post('/removeFromUser/', permisoController.deleteToUser );
 
+permisosRoutes.delete('/:id', permisoController.deletePermiso );
 
 export default permisosRoutes;
