@@ -2,18 +2,66 @@
     This is the user controller file of the server  
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 18/12/2020
-    Last update: 18/12/2020
+    Last update: 11/01/2021
 */
 
 // imports ->
 import UserService from "../services/userService";
 import { Request, Response } from "express";
 import Usuario from '../models/usuario';
+import TokenService from '../services/tokenService';
 
 
 class UserController {
 
     private userSevice: UserService = new UserService();
+
+
+
+    login = async ( req: Request, res: Response ) => {
+
+
+        // Obtengo el mail y contrañse
+        const { email, password } = req.body;
+
+        const token = this.userSevice.login( email, password ).then( token => {
+
+            return res.json({
+                ok: true,
+                token
+            });
+        }).catch( err => {
+            return res.json({
+                ok: false,
+                msg: err
+            });
+        });
+        
+    }
+
+    isValidToken = async( req: Request, res: Response ) => {
+        
+        // Obtengo el token ->
+        const token = req.params.token;
+
+        // valido el token ->
+        const isValidToken = TokenService.comprobarToken( token );
+
+        if( isValidToken != null || isValidToken != undefined ){
+
+            return res.json({
+                ok: true,
+                isValidToken: true
+            });
+        }
+        else {
+            
+            return res.json({
+                ok: true,
+                isValidToken: false
+            });
+        }
+    }
 
 
     getUsers = async ( req: Request, res: Response ) => {

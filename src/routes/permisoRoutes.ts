@@ -12,7 +12,7 @@ import { Router } from "express";
 
 // middlewares ->
 import { check } from 'express-validator';
-import bodyValidate from "../middlewares/bodyValidate";
+import bodyValidate from '../middlewares/bodyValidate';
 
 
 //Controller ->
@@ -25,14 +25,26 @@ const permisosRoutes = Router();
 
 
 
-permisosRoutes.post('/', permisoController.insert );
+permisosRoutes.post('/', [
+    check('Codigo', "El codigo es requerido").not().isEmpty(),
+    check("Descripcion", 'La descripcion es requerida').not().isEmpty(),
+    bodyValidate
+],permisoController.insert );
 
 
 
-permisosRoutes.post('/AddToUser/', permisoController.addToUser );
+permisosRoutes.post('/AddToUser/', [
+    check("idUser", 'El id del usuario es requerido'),
+    check('idPermiso', 'El id del permiso es requerido'),
+    bodyValidate
+], permisoController.addToUser );
 
 
-permisosRoutes.post('/removeFromUser/', permisoController.deleteToUser );
+permisosRoutes.post('/removeFromUser/', [
+    check("idUser", 'El id del usuario es requerido'),
+    check('idPermiso', 'El id del permiso es requerido'),
+    bodyValidate
+] ,permisoController.deleteToUser );
 
 permisosRoutes.delete('/:id', permisoController.deletePermiso );
 

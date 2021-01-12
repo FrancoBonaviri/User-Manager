@@ -2,7 +2,7 @@
     This is the user service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 19/12/2020
-    Last update: 19/12/2020
+    Last update: 11/01/2021
 */
 
 // imports ->
@@ -11,6 +11,7 @@ import Usuario from '../models/usuario';
 import bcrypt from 'bcrypt'; 
 import usuario from '../interfaces/usuario';
 import DomicilioService from './domicilioService';
+import TokenService from './tokenService';
 
 class UserService {
 
@@ -260,17 +261,45 @@ class UserService {
     }
 
 
+    login( email: string, password: string ): Promise<string>{
+        return new Promise<string>( async(resolve, reject ) => {
+
+            // obtengo el usuario ->
+            const usuario = await this.getByEmail( email );
+
+            // Si el usuario existe ->
+            if( usuario ){
+
+                // valido la contraseña ->
+                if( bcrypt.compareSync( password, usuario.ClaveHash )){
+                    
+                    // Creo y retorno el token ->
+                    const token = TokenService.generateToken( usuario );
+                    return resolve(token);
+                }
+
+                return reject('Usuario / contraseña incorrecto')
+
+
+            } else {
+                reject('Usuario / contraseña incorrecto');
+            }
+
+        })
+    }
+
+
+
+
     private fill = ( obj: any) => {
-        delete obj.ClaveHash; 
-        delete obj.FechaRegistro;
-        delete obj.FechaBaja;
+        // delete obj.ClaveHash; 
+        // delete obj.FechaRegistro;
     }
 
     private fillList = ( obj: any[] ) => {
         obj.forEach( item => {
-            delete item.ClaveHash; 
-            delete item.FechaRegistro;
-            delete item.FechaBaja;
+            // delete item.ClaveHash; 
+            // delete item.FechaRegistro;
         });
     }
 

@@ -2,7 +2,7 @@
     This is the user routes file of the server  
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 18/12/2020
-    Last update: 18/12/2020
+    Last update: 11/01/2021
     ROUTE = /user
 */
 
@@ -29,6 +29,14 @@ userRoutes.post('/', [
     check('email').isEmail(),
     bodyValidate,
 ], usersController.createUser ) // Create user
+
+userRoutes.post('/login', [
+    check('email', 'El email es requerido').not().isEmpty(),
+    check('password', 'La contraseña es requerida').not().isEmpty(),
+    bodyValidate
+], usersController.login ); // login 
+
+userRoutes.get('/isValidToken/:token', usersController.isValidToken ); // valida token 
 
 userRoutes.get('/', usersController.getUsers ); // Get all users
 
