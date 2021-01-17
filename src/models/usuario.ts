@@ -32,7 +32,7 @@ class Usuario {
     ) 
     {
         this.id = obj.id;
-        this.nombre = obj.nombre;
+        this.nombre = obj.nombre; 
         this.apellido = obj.apellido;
         this.email = obj.email;
         this.FechaNacimiento = obj.FechaNacimiento;
