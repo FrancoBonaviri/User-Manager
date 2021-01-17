@@ -124,7 +124,7 @@ class DomicilioService {
         return new Promise<boolean>( ( resolve , reject ) => {
 
             // query ->
-            let query = 'SELECT COUNT(*) from domicilio WHERE id = ?';
+            let query = 'SELECT COUNT(*) as cantidad from domicilio WHERE id = ?';
     
             // Params ->
             let params = [id];
@@ -132,7 +132,7 @@ class DomicilioService {
             // Execute query ->
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
-                if( res[0] === 1 ){
+                if( res[0]?.cantidad > 0 ){
                    return resolve( true );
                 }
                resolve( false );

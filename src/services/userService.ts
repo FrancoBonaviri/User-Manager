@@ -160,7 +160,7 @@ class UserService {
         return new Promise<boolean>( ( resolve , reject ) => {
 
             // create the query ->
-            let query = 'Select * from usuario WHERE id = ?';
+            let query = 'Select COUNT(*) as cantidad from usuario WHERE id = ?';
     
             // Params ->
             let params = [id];
@@ -168,7 +168,7 @@ class UserService {
             // Execute query ->
             this.db.executeQuery( query, params, ( res: any ) => {
                 // Si encuentra algo retorno true ->
-                if( res.length > 0 ){
+                if( res[0]?.cantidad > 0 ){
                     return resolve( true );
                 }
                 resolve( false );
@@ -195,17 +195,17 @@ class UserService {
             // Params ->
             let params = '';
 
-            if( user.Telefono.trim() !== "" ) {params += `Telefono = ${ user.Telefono }, `}
-            if( user.nombre.trim() !== "" ) {params += `nombre = ${ user.nombre }, `}
-            if( user.apellido.trim() !== "" ) {params += `apellido = ${ user.apellido }, `}
-            if( user.Telefono.trim() !== "" ) {params += `Telefono = ${ user.Telefono }, `}
-            if( user.FechaNacimiento  ) {params += `FechaNacimiento = ${ user.FechaNacimiento }, `}
+            if( user.Telefono.trim() !== "" ) {params += ` Telefono = '${ user.Telefono }',`}
+            if( user.nombre.trim() !== "" ) {params += ` nombre = '${ user.nombre }',`}
+            if( user.apellido.trim() !== "" ) {params += ` apellido = '${ user.apellido }',`}
+            if( user.FechaNacimiento  ) {params += ` FechaNacimiento = '${ user.FechaNacimiento }',`}
+            params = params.substring(0, params.length - 1);
 
             // Si se actualizo algun campo ->
             if(params != ''){
 
                 // Completo el query ->
-                let stringQuery = query + params + 'WHERE id = ?';
+                let stringQuery = query + params + ' WHERE id = ?';
 
                 // ejecuto el query ->
                 this.db.executeQuery(stringQuery, [userId], ( res: any ) => {

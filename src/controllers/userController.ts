@@ -2,7 +2,7 @@
     This is the user controller file of the server  
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 18/12/2020
-    Last update: 11/01/2021
+    Last update: 16/01/2021
 */
 
 // imports ->
@@ -10,6 +10,7 @@ import UserService from "../services/userService";
 import { Request, Response } from "express";
 import Usuario from '../models/usuario';
 import TokenService from '../services/tokenService';
+import usuario from "../interfaces/usuario";
 
 
 class UserController {
@@ -80,7 +81,15 @@ class UserController {
     getUserById = async ( req: Request, res: Response ) => {
 
         // Get the id ->
-        const id = req.params.id;
+        const id: any = req.params.id;
+
+        // Valido el id ->
+        if ( isNaN( id ) ) {
+            return res.json({
+                ok: false,
+                msg: 'Invalid Id'
+            })
+        }
 
         // get the user ->
         const user = await this.userSevice.getById( Number(id) );
@@ -119,6 +128,76 @@ class UserController {
             user
         });
 
+    }
+
+
+    updateUser = async( req: Request, res: Response ) => {
+
+        // obtengo el id ->
+        const id = req.params.id;
+
+        //Obtengo las props del user ->
+        const{ nombre, apellido, email, FechaNacimiento, Telefono } = req.body;
+
+        // creo el usuario ->
+        const user: usuario = {
+            id: Number(id),
+            nombre,
+            apellido,
+            email,
+            FechaNacimiento,
+            Telefono,
+            DomicilioId: '',
+        }
+
+        // lo actualizo ->
+        this.userSevice.updateUser(Number(id), user).then( () => {
+
+            return res.json({
+                Ok: true,
+                user
+            });
+
+        }).catch( (err) => {
+
+            return res.status(500).json({
+                ok: false,
+                message: err
+            });
+        })
+
+    } 
+
+
+    updateDomicilioUser = async( req: Request, res: Response ) => {
+
+        // OBtego el id  del usuario ->
+        let id: any = req.params.id;
+
+
+        // Valido el id ->
+        if ( isNaN( id ) || isNaN( req.body.DomicilioId ) ) {
+            return res.json({
+                ok: false,
+                msg: 'Invalid Id'
+            })
+        }
+
+        // Obtengo el id del domicilio ->
+        const domicilioId = req.body.DomicilioId;
+
+        // actualizo la prop ->
+        this.userSevice.updateDomicilioUser( id, domicilioId ).then( () => {
+            return res.json({
+                ok: true,
+                msg: 'Domicilio actualizado'
+            })
+        }).catch( err => {
+            return res.json({
+                ok: false,
+                msg: err
+            })
+        })
     }
 
 
@@ -162,7 +241,15 @@ class UserController {
     deleteUser = async( req: Request, res: Response ) => {
         
         // get the id ->
-        const id = req.params.id;
+        const id: any = req.params.id;
+
+        // Valido el id ->
+        if ( isNaN( id  ) ) {
+            return res.json({
+                ok: false,
+                msg: 'Invalid Id'
+            })
+        }
 
         // delete the user ->
         await this.userSevice.bajaById( Number(id) );

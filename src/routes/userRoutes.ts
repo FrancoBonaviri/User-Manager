@@ -46,6 +46,9 @@ userRoutes.get('/getbyEmail/:email', usersController.getUserByEmail ); // Get us
 
 userRoutes.put('/:id', usersController.deleteUser ) // Delete user 
 
+userRoutes.put('/update/:id', usersController.updateUser )
+
+userRoutes.put('/updateDomicilio/:id', usersController.updateDomicilioUser )
 
 
 export default userRoutes;

@@ -6,6 +6,7 @@ interface usuario {
     email: string;
     FechaNacimiento: Date;
     Telefono: string;
+    DomicilioId: string;
 }
 
 
