@@ -2,7 +2,7 @@
     This is the user controller file of the server  
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 18/12/2020
-    Last update: 16/01/2021
+    Last update: 13/02/2021
 */
 
 // imports ->
@@ -25,7 +25,7 @@ class UserController {
         // Obtengo el mail y contrañse
         const { email, password } = req.body;
 
-        const token = this.userSevice.login( email, password ).then( token => {
+        this.userSevice.login( email, password ).then( token => {
 
             return res.json({
                 ok: true,
@@ -219,7 +219,14 @@ class UserController {
         });
 
         // Save in DB ->
-        await this.userSevice.insert( user, password );
+        try {
+            await this.userSevice.insert( user, password );
+        } catch (e) {
+            return res.json({
+                ok: false,
+                meg: e
+            });
+        }
         
         // Obtengo el usuario ->
         var userDb =  await this.userSevice.getByEmail( user.email ) ;

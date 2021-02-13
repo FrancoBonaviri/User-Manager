@@ -2,7 +2,7 @@
     This is the user service class (CRUD)
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 19/12/2020
-    Last update: 16/01/2021
+    Last update: 13/02/2021
 */
 
 // imports ->
@@ -22,6 +22,13 @@ class UserService {
     insert = (user: Usuario, password: string) => {
 
         return new Promise( async( resolve, reject ) => {
+
+            // Validate that email wasnt register ->
+            const dbUser = await this.getByEmail(user.email);
+            if( dbUser ) {
+                return reject('User already exist')
+            }
+
 
             // Create the query ->
             let query = 'INSERT into usuario (email, ClaveHash, nombre, apellido, FechaNacimiento, Telefono)'

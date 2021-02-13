@@ -2,7 +2,7 @@
     This is the master class of the database 
     author: Franco Bonaviri | francobonaviri@hotmail.com
     Created: 18/12/2020
-    Last update: 18/12/2020
+    Last update: 13/02/2021
 */
 
 
@@ -18,7 +18,6 @@ class SqlConnection {
 
     // Start the mysql connection ->
     constructor() {
-        console.log(process.env.DATABASE_USER, process.env.DATABASE_PASSWORD)
         this.connection = mysql.createConnection(
         {
             host: 'localHost',
